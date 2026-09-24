@@ -1,7 +1,8 @@
-use std::io::Error;
+use std::{fs::create_dir_all, io::Error};
 
-use run_script::ScriptOptions;
 use uuid::Uuid;
+
+use crate::file::fs::{extract_ar_archive, extract_tar_archive};
 
 pub fn extract(archive_path: &str) -> Result<String, Error> {
     // Generates a unique id to stop this from conflicting
@@ -19,21 +20,14 @@ pub fn extract(archive_path: &str) -> Result<String, Error> {
         let control_archive = format!("{output}control.tar.xz");
         let control_extract = format!("{output}control/");
 
-        let _ = run_script::run(
-            &format!(
-                "
-        mkdir -p {output};
-        mkdir -p {data_extract};
-        mkdir -p {control_extract};
+        create_dir_all(&output)?;
+        create_dir_all(&data_extract)?;
+        create_dir_all(&control_extract)?;
 
-        ar -x {archive_path} --output={output};
-        tar -xf {data_archive} -C {data_extract};
-        tar -xf {control_archive} -C {control_extract};
-        "
-            ),
-            &vec![],
-            &ScriptOptions::new(),
-        );
+        extract_ar_archive(archive_path, &output)?;
+
+        extract_tar_archive(&data_archive, &data_extract, "xz")?;
+        extract_tar_archive(&control_archive, &control_extract, "xz")?;
     }
 
     Ok(output)
