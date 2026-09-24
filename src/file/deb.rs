@@ -100,7 +100,7 @@ impl Deb {
 
         let root = format!("{}data/", self.extracted_path.as_ref().unwrap());
 
-        for entry in glob(&format!("{}**/*", root)).expect("Failed to read glob pattern") {
+        for entry in glob(&format!("{root}**/*")).expect("Failed to read glob pattern") {
             match entry {
                 Ok(path) => {
                     let path = path.as_path();

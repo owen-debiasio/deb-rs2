@@ -8,6 +8,7 @@ use flate2::read::GzDecoder;
 use std::{
     fs::{File, create_dir_all},
     io::{Error, copy},
+    path::Path,
     str::from_utf8,
 };
 use tar::Archive;
@@ -86,8 +87,13 @@ pub fn extract_ar_archive(path: &str, dest: &str) -> Result<(), Error> {
     while let Some(entry_result) = archive.next_entry() {
         let mut entry = entry_result?;
 
-        let mut file =
-            File::create(from_utf8(entry.header().identifier()).expect("Failed to read header"))?;
+        let filename = from_utf8(entry.header().identifier())
+            .expect("Failed to read header")
+            .trim();
+
+        let output = Path::new(dest).join(filename);
+
+        let mut file = File::create(output)?;
 
         copy(&mut entry, &mut file)?;
     }
