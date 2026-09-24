@@ -11,7 +11,7 @@ A library for extracting and installing deb files
 You can install by adding the folowing to your `cargo.toml` file:
 
 ```toml
-deb-rs = "0.1"
+deb-rs = { git = "https://github.com/owen-debiasio/deb-rs2" }
 ```
 
 You need to have `ar` command (part of `binutils`) for decompressing the file archive. You also need the `tar` command to extract other archives. You need rust nightly to use this package.
@@ -36,3 +36,7 @@ fn main() -> Result<(), Error> {
 Ok(())
 }
 ```
+
+## Credits
+
+Thank you to [trickypr](https://github.com/trickypr) for the original project: [deb-rs](https://github.com/trickypr/deb-rs)
