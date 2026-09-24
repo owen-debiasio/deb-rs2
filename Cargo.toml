@@ -1,12 +1,10 @@
 [package]
-name = "deb-rs"
-version = "0.1.2"
+name = "deb-rs2"
+version = "2.1.0"
 authors = ["trickypr <trickypr@users.noreply.github.com>", "Owen DeBiasio <owen.debiasio@gmail.com>"]
 edition = "2024"
 license = "MIT"
-description = "Extracting and grabbing metadata from .deb files"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+description = "Extracting and grabbing metadata from .deb files, rebuilt for 2027"
 
 [dependencies]
 uuid = { version = "0.8", features = ["v4"] }
