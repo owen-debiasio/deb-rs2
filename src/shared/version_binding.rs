@@ -1,6 +1,3 @@
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum VersionBinding {
@@ -13,6 +10,7 @@ pub enum VersionBinding {
     Unknown,
 }
 
+#[allow(clippy::should_implement_trait)]
 impl VersionBinding {
     pub fn from_str(s: &str) -> Self {
         let s = s.split(' ').collect::<Vec<&str>>()[0];

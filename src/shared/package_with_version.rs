@@ -11,6 +11,7 @@ pub struct PackageWithVersion {
     pub binding: VersionBinding,
 }
 
+#[allow(clippy::should_implement_trait)]
 impl PackageWithVersion {
     pub fn from_str(contents: &str) -> Self {
         let split: Vec<&str> = contents.split(')').collect::<Vec<&str>>()[0]

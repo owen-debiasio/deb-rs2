@@ -1,16 +1,11 @@
-use std::{
-    fs,
-    io::{Error, ErrorKind},
-};
+use std::{fs, io::Error};
 
-use debcontrol::{parse_str, Paragraph};
+use debcontrol::{Paragraph, parse_str};
 use glob::glob;
-#[cfg(feature = "serde")]
-use serde::{Deserialize, Serialize};
 
 use crate::{
-    file::{extract, Control, PathItem, Version},
-    shared::{paragraph_contains, PackageWithVersion},
+    file::{Control, PathItem, Version, extract},
+    shared::{PackageWithVersion, paragraph_contains},
 };
 
 /**
@@ -41,7 +36,7 @@ use crate::{
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Deb {
-    path: &'static str,
+    path: String,
     pub extracted_path: Option<String>,
 }
 
@@ -49,7 +44,7 @@ pub struct Deb {
 * @todo Add support for prerm and postinst files
 */
 impl Deb {
-    pub fn new(path: &'static str) -> Self {
+    pub fn new(path: String) -> Self {
         Deb {
             path,
             extracted_path: None,
@@ -69,10 +64,9 @@ impl Deb {
      */
     fn extract_check(&self) -> Result<(), Error> {
         if self.extracted_path.is_none() {
-            return Err(Error::new(
-          ErrorKind::Other,
-          "This deb file has not been extracted. Please run `extract()` before calling `retrieve_control`",
-          ));
+            return Err(Error::other(
+                "This deb file has not been extracted. Please run `extract()` before calling `retrieve_control`",
+            ));
         };
 
         Ok(())
@@ -135,11 +129,7 @@ impl Deb {
     }
 
     fn str_option_to_number(&self, option: Option<String>) -> Option<u64> {
-        if let Some(option) = option {
-            Some(option.parse().unwrap())
-        } else {
-            None
-        }
+        option.map(|option| option.parse().unwrap())
     }
 
     fn get_control_option_str(&self, control: &Paragraph, query: &str) -> Option<String> {
